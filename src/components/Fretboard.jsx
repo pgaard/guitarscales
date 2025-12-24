@@ -1,6 +1,7 @@
 import React from 'react';
 import './Fretboard.css';
 import { TUNING, getNoteIndex, getNoteFromIndex, getScaleNotes, getIntervalName } from '../utils/musicTheory';
+import { playNote, getNoteFrequency } from '../utils/audioEngine';
 
 const Fretboard = ({ keyNote, scaleType, displayMode }) => {
   const numFrets = 15;
@@ -25,6 +26,11 @@ const Fretboard = ({ keyNote, scaleType, displayMode }) => {
     return getIntervalName(semitones);
   };
 
+  const handleNoteClick = (stringIndex, fret, note) => {
+    const frequency = getNoteFrequency(stringIndex, fret);
+    playNote(frequency);
+  };
+
   return (
     <div className="fretboard-container">
       <div className="fretboard">
@@ -44,7 +50,11 @@ const Fretboard = ({ keyNote, scaleType, displayMode }) => {
               return (
                 <div key={fretIndex} className="fret">
                   {inScale && (
-                    <div className={`note-marker ${isRoot ? 'root' : ''}`}>
+                    <div
+                      className={`note-marker ${isRoot ? 'root' : ''}`}
+                      onClick={() => handleNoteClick(stringIndex, fretIndex, note)}
+                      title={`Play ${note}`}
+                    >
                       {displayMode === 'notes' ? note : getInterval(note)}
                     </div>
                   )}

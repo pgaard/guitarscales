@@ -1,0 +1,157 @@
+.fretboard-container {
+  overflow-x: auto;
+  padding: 2rem 0;
+  background: #2a2a2a;
+  border-radius: 8px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.fretboard {
+  display: flex;
+  flex-direction: column;
+  min-width: 1000px;
+  /* Ensure it doesn't squish */
+  position: relative;
+  padding-right: 2rem;
+  /* Make room for the last fret number hanging off */
+}
+
+.string {
+  display: flex;
+  height: 40px;
+  position: relative;
+  align-items: center;
+}
+
+.string::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: #888;
+  z-index: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Thicker strings for lower notes */
+.string:nth-child(4)::before {
+  height: 3px;
+}
+
+.string:nth-child(5)::before {
+  height: 4px;
+}
+
+.string:nth-child(6)::before {
+  height: 5px;
+}
+
+.fret {
+  flex: 1;
+  border-right: 4px solid #555;
+  /* Fret wire */
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.fret:first-child {
+  border-right: 8px solid #ddd;
+  /* Nut */
+  flex: 0 0 60px;
+  background: #111;
+}
+
+/* Fret markers (dots) */
+.string:nth-child(3) .fret:nth-child(4)::after,
+/* 3rd fret */
+.string:nth-child(3) .fret:nth-child(6)::after,
+/* 5th fret */
+.string:nth-child(3) .fret:nth-child(8)::after,
+/* 7th fret */
+.string:nth-child(3) .fret:nth-child(10)::after,
+/* 9th fret */
+.string:nth-child(2) .fret:nth-child(13)::after,
+/* 12th fret top */
+.string:nth-child(5) .fret:nth-child(13)::after,
+/* 12th fret bottom */
+.string:nth-child(3) .fret:nth-child(16)::after
+
+/* 15th fret */
+  {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #444;
+  border-radius: 50%;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* 12th fret needs to be shifted because we are targeting specific strings */
+/* Actually, a single dot layout is easier if we just put dots on the board, 
+   but putting them inside frets is tricky with flex. 
+   Simplification: just basic fret rendering first. */
+
+.note-marker {
+  width: 28px;
+  height: 28px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-weight: bold;
+  font-size: 0.8rem;
+  z-index: 3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  position: relative;
+  /* To sit on top of string */
+}
+
+.note-marker.root {
+  background: var(--color-secondary);
+  box-shadow: 0 0 10px var(--color-secondary);
+}
+
+.fret-numbers .fret {
+  border-right: 4px solid transparent;
+  /* Match fret wire width */
+  background: transparent;
+  color: #888;
+  font-size: 0.8rem;
+  font-weight: bold;
+  height: 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  /* Push to right */
+  padding-bottom: 5px;
+  overflow: visible;
+  /* Allow number to hang over */
+}
+
+.fret-numbers .fret span {
+  transform: translateX(50%);
+  /* Center over the border (wire) */
+  width: 1.5em;
+  /* Fixed width for better centering */
+  text-align: center;
+}
+
+.fret-numbers .fret:first-child {
+  border-right: 8px solid transparent;
+  /* Match nut width */
+  background: transparent;
+}
+
+.fret-numbers::before {
+  display: none;
+}

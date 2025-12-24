@@ -67,6 +67,11 @@
   background: #111;
 }
 
+.fret-12 {
+  border-right-color: #aaa;
+  /* Highlight 12th fret wire */
+}
+
 /* Fret markers (dots) */
 .string:nth-child(3) .fret:nth-child(4)::after,
 /* 3rd fret */

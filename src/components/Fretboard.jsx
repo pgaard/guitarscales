@@ -46,9 +46,10 @@ const Fretboard = ({ keyNote, scaleType, displayMode }) => {
               const note = getNoteAtFret(stringNote, fretIndex);
               const inScale = isNoteInScale(note);
               const isRoot = note === keyNote;
+              const isTwelfth = fretIndex === 12;
 
               return (
-                <div key={fretIndex} className="fret">
+                <div key={fretIndex} className={`fret ${isTwelfth ? 'fret-12' : ''}`}>
                   {inScale && (
                     <div
                       className={`note-marker ${isRoot ? 'root' : ''}`}

@@ -143,6 +143,17 @@
   border: 2px solid #fff;
 }
 
+.note-marker.triad-outside {
+  background: #00bcd4;
+  /* Cyan/Blue */
+  color: #000;
+  transform: scale(1.05);
+  z-index: 9;
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.6);
+  border: 2px dashed #fff;
+  /* Dashed border to indicate 'outside' */
+}
+
 .note-marker.dimmed {
   opacity: 0.3;
   transform: scale(0.9);

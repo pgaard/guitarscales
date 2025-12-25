@@ -8,17 +8,16 @@ export const SCALES = {
   lydian: { name: 'Lydian', intervals: [0, 2, 4, 6, 7, 9, 11] },
   mixolydian: { name: 'Mixolydian', intervals: [0, 2, 4, 5, 7, 9, 10] },
   locrian: { name: 'Locrian', intervals: [0, 1, 3, 5, 6, 8, 10] },
-  pentatonic_minor: { name: 'Pentatonic Minor', intervals: [0, 3, 5, 7, 10] },
-  pentatonic_major: { name: 'Pentatonic Major', intervals: [0, 2, 4, 7, 9] },
-  blues: { name: 'Blues', intervals: [0, 3, 5, 6, 7, 10] },
+  pentatonic_minor: { name: 'Pentatonic Minor', intervals: [0, 3, 5, 7, 10], parentScale: 'minor' },
+  pentatonic_major: { name: 'Pentatonic Major', intervals: [0, 2, 4, 7, 9], parentScale: 'major' },
+  blues: { name: 'Blues', intervals: [0, 3, 5, 6, 7, 10], parentScale: 'minor' },
   harmonic_minor: { name: 'Harmonic Minor', intervals: [0, 2, 3, 5, 7, 8, 11] },
   melodic_minor: { name: 'Melodic Minor', intervals: [0, 2, 3, 5, 7, 9, 11] },
   phrygian_dominant: { name: 'Phrygian Dominant', intervals: [0, 1, 4, 5, 7, 8, 10] },
   double_harmonic: { name: 'Double Harmonic', intervals: [0, 1, 4, 5, 7, 8, 11] },
-  hirajoshi: { name: 'Hirajoshi', intervals: [0, 2, 3, 7, 8] },
+  hirajoshi: { name: 'Hirajoshi', intervals: [0, 2, 3, 7, 8], parentScale: 'minor' },
   wholetone: { name: 'Whole Tone', intervals: [0, 2, 4, 6, 8, 10] },
   diminished: { name: 'Diminished', intervals: [0, 2, 3, 5, 6, 8, 9, 11] }
-
 };
 
 export const TUNING = ['E', 'B', 'G', 'D', 'A', 'E']; // High E to Low E
@@ -55,15 +54,36 @@ export function getIntervalName(semitones) {
   return intervals[semitones % 12];
 }
 
-export function getTriadNotes(scaleNotes, rootNote) {
+export function getTriadNotes(rootNote, scaleType, keyNote) {
   if (!rootNote) return null;
-  const rootIndex = scaleNotes.indexOf(rootNote);
-  if (rootIndex === -1) return null;
 
-  // Triad is 1st, 3rd, 5th relative to the root *within the scale*
-  // Indices are 0, 2, 4 relative to rootIndex
+  const currentScaleNotes = getScaleNotes(keyNote, scaleType);
+
+  const scaleInfo = SCALES[scaleType];
+
+  // If this scale has a parent (e.g., Pentatonic -> Minor), derive triad from parent
+  if (scaleInfo.parentScale) {
+    const parentNotes = getScaleNotes(keyNote, scaleInfo.parentScale);
+    const rootIndex = parentNotes.indexOf(rootNote);
+
+    // We expect parent scales to be 7-note scales where triads are 1, 3, 5
+    // Note: This assumes the rootNote exists in the parent scale
+    if (rootIndex === -1) {
+      return null;
+    }
+
+    const indices = [0, 2, 4];
+    const theoreticalTriad = indices.map(offset => parentNotes[(rootIndex + offset) % parentNotes.length]);
+
+    // Return theoretical triad (don't filter, so we can see outside notes)
+    return theoreticalTriad;
+  }
+
+  // Standard logic for full scales (1, 3, 5 of the scale itself)
+  if (!currentScaleNotes.includes(rootNote)) return null;
+  const rootIndex = currentScaleNotes.indexOf(rootNote);
   const indices = [0, 2, 4];
-  return indices.map(offset => scaleNotes[(rootIndex + offset) % scaleNotes.length]);
+  return indices.map(offset => currentScaleNotes[(rootIndex + offset) % currentScaleNotes.length]);
 }
 
 export function getChordName(triadNotes) {

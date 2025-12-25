@@ -14,7 +14,14 @@ const ScaleViewer = () => {
   }, [keyNote, scaleType]);
 
   const scaleNotes = getScaleNotes(keyNote, scaleType);
-  const triadNotes = triadRoot ? getTriadNotes(scaleNotes, triadRoot) : null;
+
+  // Use parent scale notes for triad options if available
+  const scaleInfo = SCALES[scaleType];
+  const triadOptions = scaleInfo.parentScale
+    ? getScaleNotes(keyNote, scaleInfo.parentScale)
+    : scaleNotes;
+
+  const triadNotes = triadRoot ? getTriadNotes(triadRoot, scaleType, keyNote) : null;
   const chordName = triadNotes ? getChordName(triadNotes) : '';
 
   const labelStyle = { marginRight: '1.5rem', display: 'inline-block' };
@@ -48,7 +55,7 @@ const ScaleViewer = () => {
         <label style={labelStyle}>
           Triads: <select value={triadRoot} onChange={(e) => setTriadRoot(e.target.value)}>
             <option value="">Off</option>
-            {scaleNotes.map(note => (
+            {triadOptions.map(note => (
               <option key={note} value={note}>{note}</option>
             ))}
           </select>

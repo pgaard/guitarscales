@@ -48,19 +48,28 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes }) => {
               const isRoot = note === keyNote;
               const isTwelfth = fretIndex === 12;
 
+              const isTriadNote = triadNotes && triadNotes.includes(note);
+              const shouldRender = inScale || isTriadNote;
+
               let markerClass = `note-marker ${isRoot ? 'root' : ''}`;
 
               if (triadNotes) {
-                if (triadNotes.includes(note)) {
-                  markerClass += ' triad-highlight';
+                if (isTriadNote) {
+                  if (inScale) {
+                    markerClass += ' triad-highlight';
+                  } else {
+                    markerClass += ' triad-outside';
+                  }
                 } else {
-                  markerClass += ' dimmed';
+                  if (inScale) {
+                    markerClass += ' dimmed';
+                  }
                 }
               }
 
               return (
                 <div key={fretIndex} className={`fret ${isTwelfth ? 'fret-12' : ''}`}>
-                  {inScale && (
+                  {shouldRender && (
                     <div
                       className={markerClass}
                       onClick={() => handleNoteClick(stringIndex, fretIndex, note)}

@@ -7,7 +7,7 @@ function App() {
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h1>Guitar Scales</h1>
         <p style={{ color: 'var(--color-text-dim)' }}>
-          Visualize scales on a 15-fret guitar neck
+          Visualize scales on a guitar neck
         </p>
       </header>
 

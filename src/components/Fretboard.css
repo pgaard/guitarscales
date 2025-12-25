@@ -133,6 +133,21 @@
   box-shadow: 0 0 10px var(--color-secondary);
 }
 
+.note-marker.triad-highlight {
+  background: #ffc107;
+  /* Gold/Amber color */
+  color: #000;
+  transform: scale(1.15);
+  z-index: 10;
+  box-shadow: 0 0 12px rgba(255, 193, 7, 0.6);
+  border: 2px solid #fff;
+}
+
+.note-marker.dimmed {
+  opacity: 0.3;
+  transform: scale(0.9);
+}
+
 .fret-numbers .fret {
   border-right: 4px solid transparent;
   /* Match fret wire width */

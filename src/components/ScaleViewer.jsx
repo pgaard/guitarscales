@@ -1,39 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Fretboard from './Fretboard';
-import { NOTES, SCALES } from '../utils/musicTheory';
+import { NOTES, SCALES, getScaleNotes, getTriadNotes, getChordName } from '../utils/musicTheory';
 
 const ScaleViewer = () => {
   const [keyNote, setKeyNote] = useState('C');
-  const [scaleType, setScaleType] = useState('minor'); // Default to Pentatonic Minor maybe? Or just Minor
+  const [scaleType, setScaleType] = useState('minor');
   const [displayMode, setDisplayMode] = useState('notes');
+  const [triadRoot, setTriadRoot] = useState('');
+
+  // Reset triad when key or scale changes
+  useEffect(() => {
+    setTriadRoot('');
+  }, [keyNote, scaleType]);
+
+  const scaleNotes = getScaleNotes(keyNote, scaleType);
+  const triadNotes = triadRoot ? getTriadNotes(scaleNotes, triadRoot) : null;
+  const chordName = triadNotes ? getChordName(triadNotes) : '';
+
+  const labelStyle = { marginRight: '1.5rem', display: 'inline-block' };
 
   return (
     <div className="scale-viewer">
       <div className="controls card">
-        <label>
-          Key:
-          <select value={keyNote} onChange={(e) => setKeyNote(e.target.value)}>
+        <label style={labelStyle}>
+          Key: <select value={keyNote} onChange={(e) => setKeyNote(e.target.value)}>
             {NOTES.map(note => (
               <option key={note} value={note}>{note}</option>
             ))}
           </select>
         </label>
 
-        <label>
-          Scale:
-          <select value={scaleType} onChange={(e) => setScaleType(e.target.value)}>
+        <label style={labelStyle}>
+          Scale: <select value={scaleType} onChange={(e) => setScaleType(e.target.value)}>
             {Object.entries(SCALES).map(([key, info]) => (
               <option key={key} value={key}>{info.name}</option>
             ))}
           </select>
         </label>
 
-        <label>
-          Display:
-          <select value={displayMode} onChange={(e) => setDisplayMode(e.target.value)}>
+        <label style={labelStyle}>
+          Display: <select value={displayMode} onChange={(e) => setDisplayMode(e.target.value)}>
             <option value="notes">Notes</option>
             <option value="intervals">Intervals</option>
           </select>
+        </label>
+
+        <label style={labelStyle}>
+          Triads: <select value={triadRoot} onChange={(e) => setTriadRoot(e.target.value)}>
+            <option value="">Off</option>
+            {scaleNotes.map(note => (
+              <option key={note} value={note}>{note}</option>
+            ))}
+          </select>
+          {chordName && <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: '#ffc107' }}>{triadRoot} {chordName}</span>}
         </label>
       </div>
 
@@ -45,6 +64,7 @@ const ScaleViewer = () => {
           keyNote={keyNote}
           scaleType={scaleType}
           displayMode={displayMode}
+          triadNotes={triadNotes}
         />
       </div>
     </div>

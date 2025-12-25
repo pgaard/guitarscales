@@ -3,7 +3,7 @@ import './Fretboard.css';
 import { TUNING, getNoteIndex, getNoteFromIndex, getScaleNotes, getIntervalName } from '../utils/musicTheory';
 import { playNote, getNoteFrequency } from '../utils/audioEngine';
 
-const Fretboard = ({ keyNote, scaleType, displayMode }) => {
+const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes }) => {
   const numFrets = 15;
   const strings = TUNING; // ['E', 'B', 'G', 'D', 'A', 'E']
 
@@ -48,11 +48,21 @@ const Fretboard = ({ keyNote, scaleType, displayMode }) => {
               const isRoot = note === keyNote;
               const isTwelfth = fretIndex === 12;
 
+              let markerClass = `note-marker ${isRoot ? 'root' : ''}`;
+
+              if (triadNotes) {
+                if (triadNotes.includes(note)) {
+                  markerClass += ' triad-highlight';
+                } else {
+                  markerClass += ' dimmed';
+                }
+              }
+
               return (
                 <div key={fretIndex} className={`fret ${isTwelfth ? 'fret-12' : ''}`}>
                   {inScale && (
                     <div
-                      className={`note-marker ${isRoot ? 'root' : ''}`}
+                      className={markerClass}
                       onClick={() => handleNoteClick(stringIndex, fretIndex, note)}
                       title={`Play ${note}`}
                     >

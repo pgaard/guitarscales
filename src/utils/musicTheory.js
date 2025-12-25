@@ -47,3 +47,35 @@ export function getIntervalName(semitones) {
   };
   return intervals[semitones % 12];
 }
+
+export function getTriadNotes(scaleNotes, rootNote) {
+  if (!rootNote) return null;
+  const rootIndex = scaleNotes.indexOf(rootNote);
+  if (rootIndex === -1) return null;
+
+  // Triad is 1st, 3rd, 5th relative to the root *within the scale*
+  // Indices are 0, 2, 4 relative to rootIndex
+  const indices = [0, 2, 4];
+  return indices.map(offset => scaleNotes[(rootIndex + offset) % scaleNotes.length]);
+}
+
+export function getChordName(triadNotes) {
+  if (!triadNotes || triadNotes.length !== 3) return '';
+
+  const rootIndex = getNoteIndex(triadNotes[0]);
+  const thirdIndex = getNoteIndex(triadNotes[1]);
+  const fifthIndex = getNoteIndex(triadNotes[2]);
+
+  let firstInterval = thirdIndex - rootIndex;
+  if (firstInterval < 0) firstInterval += 12;
+
+  let secondInterval = fifthIndex - rootIndex;
+  if (secondInterval < 0) secondInterval += 12;
+
+  if (firstInterval === 4 && secondInterval === 7) return 'Major';
+  if (firstInterval === 3 && secondInterval === 7) return 'Minor';
+  if (firstInterval === 3 && secondInterval === 6) return 'Diminished';
+  if (firstInterval === 4 && secondInterval === 8) return 'Augmented';
+
+  return '';
+}

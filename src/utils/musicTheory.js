@@ -11,6 +11,13 @@ export const SCALES = {
   pentatonic_minor: { name: 'Pentatonic Minor', intervals: [0, 3, 5, 7, 10] },
   pentatonic_major: { name: 'Pentatonic Major', intervals: [0, 2, 4, 7, 9] },
   blues: { name: 'Blues', intervals: [0, 3, 5, 6, 7, 10] },
+  harmonic_minor: { name: 'Harmonic Minor', intervals: [0, 2, 3, 5, 7, 8, 11] },
+  melodic_minor: { name: 'Melodic Minor', intervals: [0, 2, 3, 5, 7, 9, 11] },
+  phrygian_dominant: { name: 'Phrygian Dominant', intervals: [0, 1, 4, 5, 7, 8, 10] },
+  double_harmonic: { name: 'Double Harmonic', intervals: [0, 1, 4, 5, 7, 8, 11] },
+  hirajoshi: { name: 'Hirajoshi', intervals: [0, 2, 3, 7, 8] },
+  wholetone: { name: 'Whole Tone', intervals: [0, 2, 4, 6, 8, 10] },
+  diminished: { name: 'Diminished', intervals: [0, 2, 3, 5, 6, 8, 9, 11] }
 
 };
 

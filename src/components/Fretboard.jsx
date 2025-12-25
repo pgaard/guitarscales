@@ -3,8 +3,7 @@ import './Fretboard.css';
 import { TUNING, getNoteIndex, getNoteFromIndex, getScaleNotes, getIntervalName } from '../utils/musicTheory';
 import { playNote, getNoteFrequency } from '../utils/audioEngine';
 
-const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes }) => {
-  const numFrets = 15;
+const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 15 }) => {
   const strings = TUNING; // ['E', 'B', 'G', 'D', 'A', 'E']
 
   const scaleNotes = getScaleNotes(keyNote, scaleType);

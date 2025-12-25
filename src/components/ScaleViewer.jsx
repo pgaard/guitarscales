@@ -7,6 +7,7 @@ const ScaleViewer = () => {
   const [scaleType, setScaleType] = useState('minor');
   const [displayMode, setDisplayMode] = useState('notes');
   const [triadRoot, setTriadRoot] = useState('');
+  const [fretCount, setFretCount] = useState(15);
 
   // Reset triad when key or scale changes
   useEffect(() => {
@@ -53,6 +54,15 @@ const ScaleViewer = () => {
         </label>
 
         <label style={labelStyle}>
+          Frets: <select value={fretCount} onChange={(e) => setFretCount(parseInt(e.target.value))}>
+            {[...Array(20)].map((_, i) => {
+              const num = i + 5;
+              return <option key={num} value={num}>{num}</option>
+            })}
+          </select>
+        </label>
+
+        <label style={labelStyle}>
           Triads: <select value={triadRoot} onChange={(e) => setTriadRoot(e.target.value)}>
             <option value="">Off</option>
             {triadOptions.map(note => (
@@ -72,6 +82,7 @@ const ScaleViewer = () => {
           scaleType={scaleType}
           displayMode={displayMode}
           triadNotes={triadNotes}
+          numFrets={fretCount}
         />
       </div>
     </div>

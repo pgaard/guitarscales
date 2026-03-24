@@ -83,9 +83,7 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 15 
           </div>
         ))}
       </div>
-      <div style={{ textAlign: 'center', marginTop: '1rem', color: '#888' }}>
-        <small>Fret 0 is the nut (open string)</small>
-      </div>
+
     </div>
   );
 };

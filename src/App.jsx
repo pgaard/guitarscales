@@ -6,9 +6,7 @@ function App() {
     <div className="container">
       <header style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h1>Guitar Scales</h1>
-        <p style={{ color: 'var(--color-text-dim)' }}>
-          Visualize scales on a guitar neck
-        </p>
+
       </header>
 
       <main>
@@ -16,7 +14,7 @@ function App() {
       </main>
 
       <footer style={{ textAlign: 'center', marginTop: '4rem', color: '#555' }}>
-        <small>&copy; 2025 Guitar Scales App</small>
+        <small>&copy; {new Date().getFullYear()} Guitar Scales App</small>
       </footer>
     </div>
   );

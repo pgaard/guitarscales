@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Fretboard from './Fretboard';
+import ScaleGraphic from './ScaleGraphic';
 import { NOTES, SCALES, getScaleNotes, getTriadNotes, getChordName } from '../utils/musicTheory';
 
 const ScaleViewer = () => {
@@ -65,11 +66,12 @@ const ScaleViewer = () => {
         <label style={labelStyle}>
           Triads: <select value={triadRoot} onChange={(e) => setTriadRoot(e.target.value)}>
             <option value="">Off</option>
-            {triadOptions.map(note => (
-              <option key={note} value={note}>{note}</option>
-            ))}
+            {triadOptions.map(note => {
+              const notes = getTriadNotes(note, scaleType, keyNote);
+              const name = getChordName(notes);
+              return <option key={note} value={note}>{note} {name}</option>;
+            })}
           </select>
-          {chordName && <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: '#ffc107' }}>{triadRoot} {chordName}</span>}
         </label>
       </div>
 
@@ -77,6 +79,9 @@ const ScaleViewer = () => {
         <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
           {keyNote} {SCALES[scaleType].name}
         </h2>
+        
+        <ScaleGraphic keyNote={keyNote} scaleType={scaleType} />
+        
         <Fretboard
           keyNote={keyNote}
           scaleType={scaleType}

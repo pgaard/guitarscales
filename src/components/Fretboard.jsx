@@ -1,10 +1,11 @@
 import React from 'react';
 import './Fretboard.css';
-import { TUNING, getNoteIndex, getNoteFromIndex, getScaleNotes, getIntervalName } from '../utils/musicTheory';
+import { TUNINGS, getNoteIndex, getNoteFromIndex, getScaleNotes, getIntervalName } from '../utils/musicTheory';
 import { playNote, getNoteFrequency } from '../utils/audioEngine';
 
-const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 15 }) => {
-  const strings = TUNING; // ['E', 'B', 'G', 'D', 'A', 'E']
+const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 15, tuningKey = 'standard' }) => {
+  const tuning = TUNINGS[tuningKey];
+  const strings = tuning.strings;
 
   const scaleNotes = getScaleNotes(keyNote, scaleType);
   const rootNoteIndex = getNoteIndex(keyNote);
@@ -26,7 +27,8 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 15 
   };
 
   const handleNoteClick = (stringIndex, fret, note) => {
-    const frequency = getNoteFrequency(stringIndex, fret);
+    const baseFreq = tuning.freqs[stringIndex];
+    const frequency = getNoteFrequency(baseFreq, fret);
     playNote(frequency);
   };
 
@@ -49,10 +51,13 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 15 
 
               const isTriadNote = triadNotes && triadNotes.includes(note);
               const shouldRender = inScale || isTriadNote;
+              
+              const isNutUnscaled = fretIndex === 0 && !shouldRender;
+              const finalShouldRender = shouldRender || isNutUnscaled;
 
               let markerClass = `note-marker ${isRoot ? 'root' : ''}`;
 
-              if (triadNotes) {
+              if (triadNotes && shouldRender) {
                 if (isTriadNote) {
                   if (inScale) {
                     markerClass += ' triad-highlight';
@@ -66,9 +71,13 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 15 
                 }
               }
 
+              if (isNutUnscaled) {
+                markerClass = 'note-marker nut-unscaled';
+              }
+
               return (
                 <div key={fretIndex} className={`fret ${isTwelfth ? 'fret-12' : ''}`}>
-                  {shouldRender && (
+                  {finalShouldRender && (
                     <div
                       className={markerClass}
                       onClick={() => handleNoteClick(stringIndex, fretIndex, note)}

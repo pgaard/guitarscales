@@ -8,19 +8,7 @@ export const initAudio = () => {
   return audioCtx;
 };
 
-// Base frequencies for open strings (High E to Low E)
-// Standard Tuning: E4, B3, G3, D3, A2, E2
-export const STRING_FREQUENCIES = [
-  329.63, // E4 (High E)
-  246.94, // B3
-  196.00, // G3
-  146.83, // D3
-  110.00, // A2
-  82.41   // E2 (Low E)
-];
-
-export const getNoteFrequency = (stringIndex, fret) => {
-  const baseFreq = STRING_FREQUENCIES[stringIndex];
+export const getNoteFrequency = (baseFreq, fret) => {
   // Frequency formula: f = f0 * (2 ^ (n / 12))
   return baseFreq * Math.pow(2, fret / 12);
 };

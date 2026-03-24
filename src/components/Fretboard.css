@@ -159,6 +159,14 @@
   transform: scale(0.9);
 }
 
+.note-marker.nut-unscaled {
+  background: transparent;
+  box-shadow: none;
+  color: #777;
+  font-weight: normal;
+  cursor: default;
+}
+
 .fret-numbers .fret {
   border-right: 4px solid transparent;
   /* Match fret wire width */

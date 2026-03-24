@@ -20,7 +20,19 @@ export const SCALES = {
   diminished: { name: 'Diminished', intervals: [0, 2, 3, 5, 6, 8, 9, 11] }
 };
 
-export const TUNING = ['E', 'B', 'G', 'D', 'A', 'E']; // High E to Low E
+export const TUNINGS = {
+  standard: { name: 'Standard', description: 'E-A-D-G-B-E', strings: ['E', 'B', 'G', 'D', 'A', 'E'], freqs: [329.63, 246.94, 196.00, 146.83, 110.00, 82.41] },
+  drop_d: { name: 'Drop D', description: 'D-A-D-G-B-E', strings: ['E', 'B', 'G', 'D', 'A', 'D'], freqs: [329.63, 246.94, 196.00, 146.83, 110.00, 73.42] },
+  open_g: { name: 'Open G', description: 'D-G-D-G-B-D', strings: ['D', 'B', 'G', 'D', 'G', 'D'], freqs: [293.66, 246.94, 196.00, 146.83, 98.00, 73.42] },
+  dadgad: { name: 'DADGAD', description: 'D-A-D-G-A-D', strings: ['D', 'A', 'G', 'D', 'A', 'D'], freqs: [293.66, 220.00, 196.00, 146.83, 110.00, 73.42] },
+  open_d: { name: 'Open D', description: 'D-A-D-F#-A-D', strings: ['D', 'A', 'F#', 'D', 'A', 'D'], freqs: [293.66, 220.00, 185.00, 146.83, 110.00, 73.42] },
+  eb_standard: { name: 'Eb Standard', description: 'Eb-Ab-Db-Gb-Bb-Eb', strings: ['D#', 'A#', 'F#', 'C#', 'G#', 'D#'], freqs: [311.13, 233.08, 185.00, 138.59, 103.83, 77.78] },
+  open_e: { name: 'Open E', description: 'E-B-E-G#-B-E', strings: ['E', 'B', 'G#', 'E', 'B', 'E'], freqs: [329.63, 246.94, 207.65, 164.81, 123.47, 82.41] },
+  open_a: { name: 'Open A', description: 'E-A-C#-E-A-E', strings: ['E', 'A', 'E', 'C#', 'A', 'E'], freqs: [329.63, 220.00, 164.81, 138.59, 110.00, 82.41] },
+  drop_c: { name: 'Drop C', description: 'C-G-C-F-A-D', strings: ['D', 'A', 'F', 'C', 'G', 'C'], freqs: [293.66, 220.00, 174.61, 130.81, 98.00, 65.41] }
+};
+
+export const TUNING = TUNINGS.standard.strings; // Default fallback
 
 export function getNoteIndex(note) {
   return NOTES.indexOf(note);

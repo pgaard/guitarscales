@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Fretboard from './Fretboard';
 import ScaleGraphic from './ScaleGraphic';
-import { NOTES, SCALES, getScaleNotes, getTriadNotes, getChordName } from '../utils/musicTheory';
+import { NOTES, SCALES, TUNINGS, getScaleNotes, getTriadNotes, getChordName } from '../utils/musicTheory';
 
 const ScaleViewer = () => {
   const [keyNote, setKeyNote] = useState('C');
@@ -9,6 +9,7 @@ const ScaleViewer = () => {
   const [displayMode, setDisplayMode] = useState('notes');
   const [triadRoot, setTriadRoot] = useState('');
   const [fretCount, setFretCount] = useState(15);
+  const [tuningKey, setTuningKey] = useState('standard');
 
   // Reset triad when key or scale changes
   useEffect(() => {
@@ -26,7 +27,7 @@ const ScaleViewer = () => {
   const triadNotes = triadRoot ? getTriadNotes(triadRoot, scaleType, keyNote) : null;
   const chordName = triadNotes ? getChordName(triadNotes) : '';
 
-  const labelStyle = { marginRight: '1.5rem', display: 'inline-block' };
+  const labelStyle = { marginRight: '0.75rem', display: 'inline-block' };
 
   return (
     <div className="scale-viewer">
@@ -73,6 +74,14 @@ const ScaleViewer = () => {
             })}
           </select>
         </label>
+
+        <label style={{ ...labelStyle, marginRight: 0 }}>
+          Tuning: <select value={tuningKey} onChange={(e) => setTuningKey(e.target.value)}>
+            {Object.entries(TUNINGS).map(([key, info]) => (
+              <option key={key} value={key}>{info.name}</option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div className="card">
@@ -88,6 +97,7 @@ const ScaleViewer = () => {
           displayMode={displayMode}
           triadNotes={triadNotes}
           numFrets={fretCount}
+          tuningKey={tuningKey}
         />
       </div>
     </div>

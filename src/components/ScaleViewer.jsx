@@ -64,6 +64,13 @@ const ScaleViewer = () => {
           </select>
         </label>
 
+        <label style={{ ...labelStyle, marginRight: 0 }}>
+          Tuning: <select value={tuningKey} onChange={(e) => setTuningKey(e.target.value)}>
+            {Object.entries(TUNINGS).map(([key, info]) => (
+              <option key={key} value={key}>{info.name}</option>
+            ))}
+          </select>
+        </label>
         <label style={labelStyle}>
           Triads: <select value={triadRoot} onChange={(e) => setTriadRoot(e.target.value)}>
             <option value="">Off</option>
@@ -75,22 +82,14 @@ const ScaleViewer = () => {
           </select>
         </label>
 
-        <label style={{ ...labelStyle, marginRight: 0 }}>
-          Tuning: <select value={tuningKey} onChange={(e) => setTuningKey(e.target.value)}>
-            {Object.entries(TUNINGS).map(([key, info]) => (
-              <option key={key} value={key}>{info.name}</option>
-            ))}
-          </select>
-        </label>
+
       </div>
 
       <div className="card">
         <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
           {keyNote} {SCALES[scaleType].name}
         </h2>
-        
-        <ScaleGraphic keyNote={keyNote} scaleType={scaleType} />
-        
+
         <Fretboard
           keyNote={keyNote}
           scaleType={scaleType}
@@ -99,6 +98,8 @@ const ScaleViewer = () => {
           numFrets={fretCount}
           tuningKey={tuningKey}
         />
+
+        <ScaleGraphic keyNote={keyNote} scaleType={scaleType} triadNotes={triadNotes} />
       </div>
     </div>
   );

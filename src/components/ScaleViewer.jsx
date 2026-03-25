@@ -8,7 +8,7 @@ const ScaleViewer = () => {
   const [scaleType, setScaleType] = useState('minor');
   const [displayMode, setDisplayMode] = useState('notes');
   const [triadRoot, setTriadRoot] = useState('');
-  const [fretCount, setFretCount] = useState(15);
+  const [fretCount, setFretCount] = useState(12);
   const [tuningKey, setTuningKey] = useState('standard');
 
   // Reset triad when key or scale changes
@@ -27,11 +27,11 @@ const ScaleViewer = () => {
   const triadNotes = triadRoot ? getTriadNotes(triadRoot, scaleType, keyNote) : null;
   const chordName = triadNotes ? getChordName(triadNotes) : '';
 
-  const labelStyle = { marginRight: '0.75rem', display: 'inline-block' };
+  const labelStyle = { display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' };
 
   return (
     <div className="scale-viewer">
-      <div className="controls card">
+      <div className="controls card" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem 1rem', justifyContent: 'center' }}>
         <label style={labelStyle}>
           Key: <select value={keyNote} onChange={(e) => setKeyNote(e.target.value)}>
             {NOTES.map(note => (
@@ -64,7 +64,7 @@ const ScaleViewer = () => {
           </select>
         </label>
 
-        <label style={{ ...labelStyle, marginRight: 0 }}>
+        <label style={labelStyle}>
           Tuning: <select value={tuningKey} onChange={(e) => setTuningKey(e.target.value)}>
             {Object.entries(TUNINGS).map(([key, info]) => (
               <option key={key} value={key}>{info.name}</option>

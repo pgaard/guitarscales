@@ -5,7 +5,7 @@ import { NOTES, SCALES, TUNINGS, getScaleNotes, getTriadNotes, getChordName } fr
 
 const ScaleViewer = () => {
   const [keyNote, setKeyNote] = useState('C');
-  const [scaleType, setScaleType] = useState('minor');
+  const [scaleType, setScaleType] = useState('major');
   const [displayMode, setDisplayMode] = useState('notes');
   const [triadRoot, setTriadRoot] = useState('');
   const [fretCount, setFretCount] = useState(12);

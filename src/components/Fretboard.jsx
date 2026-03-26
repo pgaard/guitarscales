@@ -34,7 +34,7 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 12,
 
   return (
     <div className="fretboard-container">
-      <div className="fretboard">
+      <div className="fretboard" style={{ minWidth: `${Math.max(100 + (numFrets * 55), 300)}px` }}>
         <div className="string fret-numbers">
           {[...Array(numFrets + 1)].map((_, i) => (
             <div key={i} className="fret"><span>{i}</span></div>

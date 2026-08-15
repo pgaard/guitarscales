@@ -1,16 +1,73 @@
-# React + Vite
+# Guitar Scales
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive fretboard for looking up guitar scales. Pick a key and a scale and the notes light
+up on the neck; click any note to hear it.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **17 scales and modes** — the seven diatonic modes (listed as major, minor, and dorian through
+  locrian), pentatonic major/minor, blues, harmonic and melodic minor, phrygian dominant, double
+  harmonic, hirajoshi, whole tone, and diminished.
+- **9 tunings** — standard, drop D, drop C, Eb standard, DADGAD, and open G/D/E/A. Note positions
+  follow the selected tuning.
+- **Adjustable neck length** — show anywhere from 5 to 24 frets, with the usual inlay markers.
+- **Three display modes** — label each position with its note name, its interval from the root
+  (`R`, `b3`, `5`, …), or its fret number.
+- **Triad overlay** — pick a scale degree to highlight the triad built on it. The dropdown names
+  each chord's quality (major, minor, diminished, augmented, sus, and odd stacks described by
+  interval). Notes in the triad stay bright, the rest of the scale dims, and any triad note falling
+  outside the current scale is marked distinctly.
+- **Scale diagram** — under the fretboard, the scale is laid out as a row of degrees showing the
+  semitone step between each one, with the triad on every degree colour-coded by quality.
+- **Click to play** — notes are synthesised in the browser with the Web Audio API (a plucked
+  triangle wave), so there are no audio assets to load.
 
-## React Compiler
+Pentatonic, blues, and hirajoshi scales declare a `parentScale`, so their triads are derived from
+the parent seven-note scale. That is why those scales offer seven triads rather than one per scale
+note — the extra chords are the ones the scale implies but does not fully contain.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Development
 
-## Expanding the ESLint configuration
+Built with React 19 and Vite. No backend — it's a static site, and all the music theory lives in
+`src/utils/musicTheory.js`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev      # dev server with HMR
+npm run build    # production build to dist/
+npm run preview  # serve the production build locally
+npm run lint     # eslint
+```
+
+Source layout:
+
+| Path | Purpose |
+| --- | --- |
+| `src/utils/musicTheory.js` | Notes, scale/tuning tables, scale and triad derivation, chord naming |
+| `src/utils/audioEngine.js` | Web Audio oscillator and pluck envelope |
+| `src/components/ScaleViewer.jsx` | Top-level controls and state |
+| `src/components/Fretboard.jsx` | The neck: note markers, highlighting, click-to-play |
+| `src/components/ScaleGraphic.jsx` | Scale-degree diagram with steps and per-degree chords |
+| `src/components/fretboardLayout.js` | Board width and inlay placement |
+
+## Deployment
+
+The site is published to two hosts. Both commands build first (via their `pre` script), and both
+deploy whatever is in the working tree — not what is on `origin/main` — so push your source
+separately.
+
+| Command | Target |
+| --- | --- |
+| `npm run deploy` | GitHub Pages — pushes `dist/` to the `gh-pages` branch |
+| `npm run deploy:cf` | Cloudflare Pages — `wrangler pages deploy` to the `guitarscales` project |
+
+Notes:
+
+- `base: './'` in `vite.config.js` produces relative asset paths, which is what lets the same build
+  work under the GitHub Pages subpath (`/guitarscales/`) and at the Cloudflare root.
+- Cloudflare deploys use `npx --yes wrangler`, so wrangler is not a dependency. It needs an
+  interactive terminal the first time to complete the OAuth login; credentials are then cached
+  globally (`%APPDATA%\xdg.config\.wrangler\` on Windows). In a non-interactive shell such as CI,
+  set `CLOUDFLARE_API_TOKEN` instead.
+- GitHub Pages source is configured once in repo Settings → Pages: "Deploy from a branch",
+  `gh-pages` / root.

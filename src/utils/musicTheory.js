@@ -98,8 +98,23 @@ export function getTriadNotes(rootNote, scaleType, keyNote) {
   return indices.map(offset => currentScaleNotes[(rootIndex + offset) % currentScaleNotes.length]);
 }
 
-export function getChordName(triadNotes) {
-  if (!triadNotes || triadNotes.length !== 3) return '';
+// Triad qualities keyed by "<third interval>,<fifth interval>" in semitones
+const CHORD_QUALITIES = {
+  '4,7': { name: 'Major', symbol: 'maj' },
+  '3,7': { name: 'Minor', symbol: 'min' },
+  '3,6': { name: 'Diminished', symbol: 'dim' },
+  '4,8': { name: 'Augmented', symbol: 'aug' },
+  '2,7': { name: 'Sus2', symbol: 'sus2' },
+  '5,7': { name: 'Sus4', symbol: 'sus4' },
+  '4,6': { name: 'Major b5', symbol: 'maj♭5' },
+  '3,8': { name: 'Minor #5', symbol: 'min♯5' },
+  '2,6': { name: 'Sus2 b5', symbol: 'sus2♭5' },
+  '5,8': { name: 'Sus4 #5', symbol: 'sus4♯5' },
+  '1,7': { name: 'Phrygian b2', symbol: '♭2' }
+};
+
+export function getChordQuality(triadNotes) {
+  if (!triadNotes || triadNotes.length !== 3) return null;
 
   const rootIndex = getNoteIndex(triadNotes[0]);
   const thirdIndex = getNoteIndex(triadNotes[1]);
@@ -111,10 +126,23 @@ export function getChordName(triadNotes) {
   let secondInterval = fifthIndex - rootIndex;
   if (secondInterval < 0) secondInterval += 12;
 
-  if (firstInterval === 4 && secondInterval === 7) return 'Major';
-  if (firstInterval === 3 && secondInterval === 7) return 'Minor';
-  if (firstInterval === 3 && secondInterval === 6) return 'Diminished';
-  if (firstInterval === 4 && secondInterval === 8) return 'Augmented';
+  const quality = CHORD_QUALITIES[`${firstInterval},${secondInterval}`];
+  if (quality) return quality;
 
-  return '';
+  // Unusual stack of "thirds" - describe it by its intervals instead
+  const label = `${getIntervalName(firstInterval)}/${getIntervalName(secondInterval)}`;
+  return { name: label, symbol: label };
+}
+
+export function getChordName(triadNotes) {
+  const quality = getChordQuality(triadNotes);
+  return quality ? quality.name : '';
+}
+
+// Compact chord label for a scale degree, e.g. "Dmin", "B dim"
+export function getDegreeChord(rootNote, scaleType, keyNote) {
+  const triadNotes = getTriadNotes(rootNote, scaleType, keyNote);
+  const quality = getChordQuality(triadNotes);
+  if (!quality) return null;
+  return { ...quality, root: rootNote, notes: triadNotes };
 }

@@ -1,5 +1,13 @@
 import React from 'react';
-import { SCALES, getScaleNotes, getIntervalName } from '../utils/musicTheory';
+import { SCALES, getScaleNotes, getIntervalName, getDegreeChord } from '../utils/musicTheory';
+
+// Colour the triad quality so shapes are recognisable at a glance
+const QUALITY_COLORS = {
+  Major: '#4caf50',
+  Minor: '#42a5f5',
+  Diminished: '#ef5350',
+  Augmented: '#ab47bc'
+};
 
 
 
@@ -16,18 +24,20 @@ const ScaleGraphic = ({ keyNote, scaleType, triadNotes }) => {
     steps.push(semitones);
   }
 
-  // Note names + root interval names
+  // Note names + root interval names + the triad built on that degree
   const items = scaleNotes.map((note, i) => {
     return {
       note,
-      intervalName: getIntervalName(intervals[i])
+      intervalName: getIntervalName(intervals[i]),
+      chord: getDegreeChord(note, scaleType, keyNote)
     };
   });
 
   // Also push the octave root note to show the final step
   items.push({
     note: keyNote,
-    intervalName: '8'
+    intervalName: '8',
+    chord: getDegreeChord(keyNote, scaleType, keyNote)
   });
 
   return (
@@ -60,16 +70,30 @@ const ScaleGraphic = ({ keyNote, scaleType, triadNotes }) => {
                 textShadow: isTriadNote ? '0 0 8px rgba(255, 193, 7, 0.8)' : 'none',
                 transition: 'all 0.2s ease'
               }}>{item.note}</span>
-              <span style={{ 
-                fontSize: '0.7rem', 
+              <span style={{
+                fontSize: '0.7rem',
                 color: isTriadNote ? '#ddd' : 'var(--color-text-dim, #888)',
                 transition: 'color 0.2s ease'
               }}>{item.intervalName}</span>
+              {/* Triad built on this scale degree */}
+              <span
+                title={item.chord ? `${item.chord.root} ${item.chord.name} (${item.chord.notes.join(' - ')})` : 'No triad available in this scale'}
+                style={{
+                  fontSize: '0.65rem',
+                  marginTop: '0.15rem',
+                  whiteSpace: 'nowrap',
+                  color: item.chord
+                    ? (QUALITY_COLORS[item.chord.name] || 'var(--color-text-dim, #888)')
+                    : '#555',
+                  opacity: isTriadNote ? 1 : 0.85,
+                  transition: 'opacity 0.2s ease'
+                }}
+              >{item.chord ? item.chord.symbol : '–'}</span>
             </div>
 
             {/* Edge / Step */}
             {i < steps.length && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '3px', margin: '0 0.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '3px', margin: '0 0.25rem', marginBottom: '0.95rem' }}>
                 <span style={{ height: '2px', width: '10px', backgroundColor: '#444' }}></span>
 
                 {[...Array(steps[i] - 1)].map((_, skipIdx) => (

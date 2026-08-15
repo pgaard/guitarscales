@@ -2,7 +2,7 @@ import React from 'react';
 import './Fretboard.css';
 import { TUNINGS, getNoteIndex, getNoteFromIndex, getScaleNotes, getIntervalName } from '../utils/musicTheory';
 import { playNote, getNoteFrequency } from '../utils/audioEngine';
-import { getBoardWidth } from './fretboardLayout';
+import { getBoardWidth, getInlayCount } from './fretboardLayout';
 
 const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 12, tuningKey = 'standard' }) => {
   const tuning = TUNINGS[tuningKey];
@@ -41,61 +41,81 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 12,
             <div key={i} className="fret"><span>{i}</span></div>
           ))}
         </div>
-        {strings.map((stringNote, stringIndex) => (
-          <div key={stringIndex} className="string">
-            {/* Create frets 0 to 15 */}
+        <div className="neck">
+          {/* Inlay dots sit behind the strings, using the same cell sizing as a
+              string row so they line up with the frets at any board width. */}
+          <div className="inlay-layer" aria-hidden="true">
             {[...Array(numFrets + 1)].map((_, fretIndex) => {
-              const note = getNoteAtFret(stringNote, fretIndex);
-              const inScale = isNoteInScale(note);
-              const isRoot = note === keyNote;
-              const isTwelfth = fretIndex === 12;
-
-              const isTriadNote = triadNotes && triadNotes.includes(note);
-              const shouldRender = inScale || isTriadNote;
-
-              const isNutUnscaled = fretIndex === 0 && !shouldRender;
-              const finalShouldRender = shouldRender || isNutUnscaled;
-
-              let markerClass = `note-marker ${isRoot ? 'root' : ''}`;
-
-              if (triadNotes && shouldRender) {
-                if (isTriadNote) {
-                  if (inScale) {
-                    markerClass += ' triad-highlight';
-                  } else {
-                    markerClass += ' triad-outside';
-                  }
-                } else {
-                  if (inScale) {
-                    markerClass += ' dimmed';
-                  }
-                }
-              }
-
-              if (isNutUnscaled) {
-                markerClass = 'note-marker nut-unscaled';
-              }
-
+              const dots = getInlayCount(fretIndex);
               return (
-                <div key={fretIndex} className={`fret ${isTwelfth ? 'fret-12' : ''}`}>
-                  {finalShouldRender && (
-                    <div
-                      className={markerClass}
-                      onClick={() => handleNoteClick(stringIndex, fretIndex, note)}
-                      title={`Play ${note}`}
-                    >
-                      {displayMode === 'notes'
-                        ? note
-                        : displayMode === 'frets'
-                          ? fretIndex
-                          : getInterval(note)}
-                    </div>
+                <div key={fretIndex} className="fret">
+                  {dots === 1 && <span className="inlay inlay-single" />}
+                  {dots === 2 && (
+                    <>
+                      <span className="inlay inlay-upper" />
+                      <span className="inlay inlay-lower" />
+                    </>
                   )}
                 </div>
               );
             })}
           </div>
-        ))}
+          {strings.map((stringNote, stringIndex) => (
+            <div key={stringIndex} className="string">
+              {/* Create frets 0 to 15 */}
+              {[...Array(numFrets + 1)].map((_, fretIndex) => {
+                const note = getNoteAtFret(stringNote, fretIndex);
+                const inScale = isNoteInScale(note);
+                const isRoot = note === keyNote;
+                const isTwelfth = fretIndex === 12;
+
+                const isTriadNote = triadNotes && triadNotes.includes(note);
+                const shouldRender = inScale || isTriadNote;
+
+                const isNutUnscaled = fretIndex === 0 && !shouldRender;
+                const finalShouldRender = shouldRender || isNutUnscaled;
+
+                let markerClass = `note-marker ${isRoot ? 'root' : ''}`;
+
+                if (triadNotes && shouldRender) {
+                  if (isTriadNote) {
+                    if (inScale) {
+                      markerClass += ' triad-highlight';
+                    } else {
+                      markerClass += ' triad-outside';
+                    }
+                  } else {
+                    if (inScale) {
+                      markerClass += ' dimmed';
+                    }
+                  }
+                }
+
+                if (isNutUnscaled) {
+                  markerClass = 'note-marker nut-unscaled';
+                }
+
+                return (
+                  <div key={fretIndex} className={`fret ${isTwelfth ? 'fret-12' : ''}`}>
+                    {finalShouldRender && (
+                      <div
+                        className={markerClass}
+                        onClick={() => handleNoteClick(stringIndex, fretIndex, note)}
+                        title={`Play ${note}`}
+                      >
+                        {displayMode === 'notes'
+                          ? note
+                          : displayMode === 'frets'
+                            ? fretIndex
+                            : getInterval(note)}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>

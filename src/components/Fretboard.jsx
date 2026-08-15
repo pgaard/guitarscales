@@ -2,6 +2,7 @@ import React from 'react';
 import './Fretboard.css';
 import { TUNINGS, getNoteIndex, getNoteFromIndex, getScaleNotes, getIntervalName } from '../utils/musicTheory';
 import { playNote, getNoteFrequency } from '../utils/audioEngine';
+import { getBoardWidth } from './fretboardLayout';
 
 const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 12, tuningKey = 'standard' }) => {
   const tuning = TUNINGS[tuningKey];
@@ -34,7 +35,7 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 12,
 
   return (
     <div className="fretboard-container">
-      <div className="fretboard" style={{ minWidth: `${Math.max(100 + (numFrets * 55), 300)}px` }}>
+      <div className="fretboard" style={{ minWidth: `${getBoardWidth(numFrets)}px` }}>
         <div className="string fret-numbers">
           {[...Array(numFrets + 1)].map((_, i) => (
             <div key={i} className="fret"><span>{i}</span></div>

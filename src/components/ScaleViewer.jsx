@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Fretboard from './Fretboard';
+import { getBoardWidth } from './fretboardLayout';
 import ScaleGraphic from './ScaleGraphic';
 import { NOTES, SCALES, TUNINGS, getScaleNotes, getTriadNotes, getChordName } from '../utils/musicTheory';
 
@@ -86,7 +87,7 @@ const ScaleViewer = () => {
 
       </div>
 
-      <div className="card">
+      <div className="card fretboard-card" style={{ '--board-width': `${getBoardWidth(fretCount)}px` }}>
         <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
           {keyNote} {SCALES[scaleType].name}
         </h2>

@@ -12,6 +12,40 @@
   display: none;
 }
 
+/* On desktop, let the card grow past the page container so high fret counts
+   (up to 24) fit without scrolling. --board-width is set by ScaleViewer;
+   the extra 5rem covers the card padding and the board's right padding. */
+@media (min-width: 769px) {
+  .fretboard-card {
+    box-sizing: border-box;
+    width: min(calc(var(--board-width, 0px) + 5rem), calc(100vw - 2rem));
+    min-width: 100%;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* A pointer can't flick-scroll the way a finger can, so when the board still
+     overflows (narrow desktop window) give it a real scrollbar. */
+  .fretboard-container {
+    scrollbar-width: thin;
+    scrollbar-color: #555 transparent;
+  }
+  .fretboard-container::-webkit-scrollbar {
+    display: block;
+    height: 8px;
+  }
+  .fretboard-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .fretboard-container::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+  }
+  .fretboard-container::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }
+}
+
 .fretboard {
   display: flex;
   flex-direction: column;

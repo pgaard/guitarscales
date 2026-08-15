@@ -83,7 +83,11 @@ const Fretboard = ({ keyNote, scaleType, displayMode, triadNotes, numFrets = 12,
                       onClick={() => handleNoteClick(stringIndex, fretIndex, note)}
                       title={`Play ${note}`}
                     >
-                      {displayMode === 'notes' ? note : getInterval(note)}
+                      {displayMode === 'notes'
+                        ? note
+                        : displayMode === 'frets'
+                          ? fretIndex
+                          : getInterval(note)}
                     </div>
                   )}
                 </div>

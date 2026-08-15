@@ -52,6 +52,7 @@ const ScaleViewer = () => {
           Display: <select value={displayMode} onChange={(e) => setDisplayMode(e.target.value)}>
             <option value="notes">Notes</option>
             <option value="intervals">Intervals</option>
+            <option value="frets">Frets</option>
           </select>
         </label>
 
